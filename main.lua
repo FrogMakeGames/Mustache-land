@@ -66,9 +66,7 @@ function love.draw()
   end
   for i=0, HEI, 32 do
     love.graphics.line(0,i,WID,i)
-  end  
-  
-  for 
+  end
   --test--
   
   love.graphics.draw(player.current, player.x, player.y, 0, 2,2)
