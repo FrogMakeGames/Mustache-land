@@ -15,19 +15,39 @@ function love.load()
   player.speed = 300
   player.current = player.right -- current direction
   
-  -- initializing the world
+  --[[ initializing the world:
+  
+  this will create a 2 dimentionl array that holds
+  the type of a block, and it's x and y coordinates like so:
+  world = {
+    {air, x, y},
+    {air, x, y},
+    ... }
+    
+  with air beinng the air block, and x / y the coordinates on the screen
+  --]]   
+  
   world = {}
   i=1
   for x=0,WID,32 do
     for y=0,HEI,32 do
-      world[i] = {0, x, y}
+      world[i] = {blocks.air, x, y}
       i = i + 1
     end
   end
+  
+  -- block list
+  blocks = {}
+  blocks.air = love.graphics.newImage('spr/air.png')
+  blocks.grass = love.graphics.newImage('spr/grass.png')
+  blocks.brick = love.graphics.newImage('spr/brick.png')
+  
+  
 end
 
 function love.update(dt)
-  -- exiting the game
+  
+  -- exit the game
   if love.keyboard.isDown('escape') then
     love.event.push('quit')
   end
@@ -45,6 +65,7 @@ function love.update(dt)
     end
   end
   
+  -- should remove that once physics and a map is added
   if love.keyboard.isDown('w') then
     if player.y > 0 then
       player.y = player.y - player.speed * dt
@@ -55,7 +76,7 @@ function love.update(dt)
     end
   end
 end
-
+--                   -----------                    --
   
 function love.draw()
   love.graphics.clear(colors.RGB(140,230,250)) -- cls + background
@@ -68,6 +89,10 @@ function love.draw()
     love.graphics.line(0,i,WID,i)
   end
   --test--
+  
+  for i=1,#world do
+    love.graphics.draw(world[i][1], world[i][2], world[i][3])
+  end
   
   love.graphics.draw(player.current, player.x, player.y, 0, 2,2)
 end
