@@ -24,6 +24,7 @@ function love.load()
   blocks.air = love.graphics.newImage('spr/air.png')
   blocks.brick = love.graphics.newImage('spr/brick.png')
   blocks.grass = love.graphics.newImage('spr/grass.png')
+  blocks.dirt = love.graphics.newImage('spr/dirt.png')
   
    --[[ initializing the world:
   
@@ -83,8 +84,17 @@ function love.update(dt)
     for i=1,#world do
       -- checking where the click was done
       if (mouse.x>world[i][2] and mouse.x<world[i][2]+32) and (mouse.y>world[i][3] and mouse.y<world[i][3]+32) then
-        world[i][1] = blocks.grass
+        if world[i-1][1]==blocks.grass or world[i-1][1]==blocks.dirt then
+          world[i][1]=blocks.dirt
+        else
+          world[i][1]=blocks.grass
+        end
       end
+    end
+  -- world reset
+  elseif love.keyboard.isDown('r') then
+    for i=1,#world do
+      world[i][1]=blocks.air
     end
   end
   
