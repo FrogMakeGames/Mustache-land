@@ -1,4 +1,4 @@
 ## TODO
 
 * Write cleaner code.
-* Add colision
+* Add colision / physics
