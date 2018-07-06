@@ -1,3 +1,4 @@
+--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--
 function love.load()
   colors = require 'util/lovecolors' -- small script for colors
   
@@ -10,12 +11,21 @@ function love.load()
   player = {}
   player.right = love.graphics.newImage('spr/mus0.png')
   player.left = love.graphics.newImage('spr/mus10.png')
-  player.x = WID/2
-  player.y = HEI/2
-  player.speed = 300
+  player.x = WID/2 -- init
+  player.y = HEI/2 -- init
+  player.speed = 300 
   player.current = player.right -- current direction
   
-  --[[ initializing the world:
+  -- mouse stuff
+  mouse = {}
+  
+  -- block list
+  blocks = {}
+  blocks.air = love.graphics.newImage('spr/air.png')
+  blocks.brick = love.graphics.newImage('spr/brick.png')
+  blocks.grass = love.graphics.newImage('spr/grass.png')
+  
+   --[[ initializing the world:
   
   this will create a 2 dimentionl array that holds
   the type of a block, and it's x and y coordinates like so:
@@ -24,27 +34,19 @@ function love.load()
     {air, x, y},
     ... }
     
-  with air beinng the air block, and x / y the coordinates on the screen
-  --]]   
-  
+  --]] 
   world = {}
   i=1
-  for x=0,WID,32 do
-    for y=0,HEI,32 do
+  for x=0,WID-32,32 do
+    for y=0,HEI-32,32 do
       world[i] = {blocks.air, x, y}
       i = i + 1
     end
   end
-  
-  -- block list
-  blocks = {}
-  blocks.air = love.graphics.newImage('spr/air.png')
-  blocks.grass = love.graphics.newImage('spr/grass.png')
-  blocks.brick = love.graphics.newImage('spr/brick.png')
-  
-  
 end
+--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--
 
+--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--
 function love.update(dt)
   
   -- exit the game
@@ -75,24 +77,31 @@ function love.update(dt)
       player.y = player.y + player.speed * dt
     end
   end
-end
---                   -----------                    --
   
+end
+--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--
+
+--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--  
 function love.draw()
   love.graphics.clear(colors.RGB(140,230,250)) -- cls + background
   
-  --test--
+  --[[test grid--
   for i=0, WID, 32 do
     love.graphics.line(i,0,i,HEI)
   end
   for i=0, HEI, 32 do
     love.graphics.line(0,i,WID,i)
   end
-  --test--
+  --test--]]
   
   for i=1,#world do
     love.graphics.draw(world[i][1], world[i][2], world[i][3])
   end
   
   love.graphics.draw(player.current, player.x, player.y, 0, 2,2)
+  
+  -- cursor position
+  mouse.x, mouse.y = love.mouse.getPosition()
+  mouse.down = love.mouse.isDown(1)
 end
+--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--
