@@ -39,7 +39,7 @@ function love.load()
   i=1
   for x=0,WID-32,32 do
     for y=0,HEI-32,32 do
-      world[i] = {blocks.air, x, y}
+      world[i] = {blocks.air, x, y} -- initialize w/ 'air blocks'
       i = i + 1
     end
   end
@@ -78,6 +78,16 @@ function love.update(dt)
     end
   end
   
+  --block placing
+  if mouse.down then
+    for i=1,#world do
+      -- checking where the click was done
+      if (mouse.x>world[i][2] and mouse.x<world[i][2]+32) and (mouse.y>world[i][3] and mouse.y<world[i][3]+32) then
+        world[i][1] = blocks.grass
+      end
+    end
+  end
+  
 end
 --=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--
 
@@ -85,7 +95,7 @@ end
 function love.draw()
   love.graphics.clear(colors.RGB(140,230,250)) -- cls + background
   
-  --[[test grid--
+  --test grid--
   for i=0, WID, 32 do
     love.graphics.line(i,0,i,HEI)
   end
@@ -94,14 +104,16 @@ function love.draw()
   end
   --test--]]
   
+  -- draw the blocks at their positions
   for i=1,#world do
     love.graphics.draw(world[i][1], world[i][2], world[i][3])
   end
   
+  -- draw player
   love.graphics.draw(player.current, player.x, player.y, 0, 2,2)
   
   -- cursor position
   mouse.x, mouse.y = love.mouse.getPosition()
   mouse.down = love.mouse.isDown(1)
-end
+end 
 --=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--
