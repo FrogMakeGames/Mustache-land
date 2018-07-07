@@ -16,7 +16,13 @@ function love.load()
   player.speed = 300 
   player.current = player.right -- current direction
   
-  -- mouse stuff
+  player.gravity = -500
+  player.jump_height = -300
+  -- in most cases: player.gravity > player.jump_height
+  player.y_velocity = 0
+  player.ground = HEI-player.current:getHeight()*2 -- nice little colision at the end
+  
+  -- mouse stuff 
   mouse = {}
   
   -- block list
@@ -44,6 +50,7 @@ function love.load()
       i = i + 1
     end
   end
+  
 end
 --=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--
 
@@ -68,24 +75,33 @@ function love.update(dt)
     end
   end
   
-  -- should remove that once physics and a map is added
-  if love.keyboard.isDown('w') then
-    if player.y > 0 then
-      player.y = player.y - player.speed * dt
-    end
-  elseif love.keyboard.isDown('s') then
-    if player.y < HEI - player.current:getHeight()*2 then
-      player.y = player.y + player.speed * dt
+  -- jumping
+  if love.keyboard.isDown('space') then
+    if player.y_velocity == 0 then
+      player.y_velocity = player.jump_height
     end
   end
+  if player.y_velocity ~= 0 then
+    player.y = player.y + player.y_velocity * dt
+    player.y_velocity = player.y_velocity - player.gravity * dt
+  end
+  if player.y > player.ground then 
+    player.y_velocity = 0
+    player.y = player.ground
+  end
   
-  --block placing
+  
+  -- block placing
   if mouse.down then
     for i=1,#world do
       -- checking where the click was done
       if (mouse.x>world[i][2] and mouse.x<world[i][2]+32) and (mouse.y>world[i][3] and mouse.y<world[i][3]+32) then
-        if world[i-1][1]==blocks.grass or world[i-1][1]==blocks.dirt then
-          world[i][1]=blocks.dirt
+        if i > 1 then
+          if world[i-1][1]==blocks.grass or world[i-1][1]==blocks.dirt then
+            world[i][1]=blocks.dirt
+          else
+            world[i][1]=blocks.grass
+          end
         else
           world[i][1]=blocks.grass
         end
