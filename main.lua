@@ -13,7 +13,7 @@ function love.load()
   player.left = love.graphics.newImage('spr/mus10.png')
   player.x = WID/2 -- init
   player.y = HEI/2 -- init
-  player.speed = 300 
+  player.speed = 200 
   player.current = player.right -- current direction
   
   player.gravity = -500
@@ -65,23 +65,23 @@ function love.update(dt)
   -- player movements
   if love.keyboard.isDown('d') then
     player.current = player.right -- change direction
-    if player.x < WID - player.current:getWidth()*2 then -- colision
+    if player.x < WID - player.current:getWidth()*2 then -- right colision
       player.x = player.x + player.speed * dt
     end
   elseif love.keyboard.isDown('a') then
     player.current = player.left -- change direction
-    if player.x > 0 then -- colision
+    if player.x > 0 then -- left colision
       player.x = player.x - player.speed * dt
     end
   end
   
   -- jumping
-  if love.keyboard.isDown('space') then
-    if player.y_velocity == 0 then
+  if love.keyboard.isDown('w') then
+    if player.y_velocity == 0 then -- checks if the player's on the ground
       player.y_velocity = player.jump_height
     end
   end
-  if player.y_velocity ~= 0 then
+  if player.y_velocity ~= 0 then -- checks if the player's in the air
     player.y = player.y + player.y_velocity * dt
     player.y_velocity = player.y_velocity - player.gravity * dt
   end
